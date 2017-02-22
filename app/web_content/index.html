@@ -1,0 +1,618 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>钢琴管理</title>
+  <link rel="stylesheet" href="./bower_components/ui-select/dist/select.min.css">
+  <link rel="stylesheet" href="./bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./bower_components/angular-bootstrap-datetimepicker/src/css/datetimepicker.css">
+  <link rel="stylesheet" href="./styles/style.css">
+  <link href="./bower_components/bootstrap/dist/css/pagination.css" rel="stylesheet">
+
+</head>
+
+<body ng-app="myApp" ng-controller="indexController">
+
+<div class="navbar  navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand"  id="logo">管理系统</a>
+    </div>
+    <div ng-show="isLogin" class="pull-right" style="vertical-align: bottom;">
+<a class="cursor" style="font-size:18px;text-decoration: none;line-height: 50px;height:50px;vertical-align: bottom" ng-click="logout()">退出登录</a>
+    </div>
+  </div>
+</div>
+  <div class="loading-modal" ng-if="loading">
+    <div class="loading">
+      <img id="loadingImg" src="./images/loading.gif" alt="" style="border-radius:5px;"/><p >加载中...</p>
+    </div>
+  </div>
+      <ui-view></ui-view>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js"></script>
+<script src="bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/bootbox-4.4.0/bootbox.js"></script>
+<script src="src/directives/directive.js"></script>
+<script src="src/services/service.js"></script>
+<script src="src/controllers/controller.js"></script>
+<script src="src/filter/filter.js"></script>
+<script src="bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
+<script src="src/drag.js"></script>
+<script>
+  var myApp = angular.module('myApp', ['ngAnimate','ui.bootstrap','ui.router','controller','ui.bootstrap.datetimepicker','service','myFilter','LocalStorageModule']);
+
+
+  myApp.run(function($rootScope, $state){
+    $rootScope.$on("$stateChangeSuccess",  function(event, toState, toParams, fromState, fromParams) {
+      // to be used for back button //won't work when page is reloaded.
+      $rootScope.previousState_name = fromState.name;
+      $rootScope.previousState_params = fromParams;
+    });
+    $rootScope.back = function() {//实现返回
+      $state.go($rootScope.previousState_name,$rootScope.previousState_params);
+    };
+  });
+  myApp
+          .config(['localStorageServiceProvider',function(localStorageServiceProvider){
+            localStorageServiceProvider
+                    .setPrefix('myApp')
+                    .setStorageType('sessionStorage')
+                    .setNotify(true,true);
+          }])
+          .config(function($stateProvider, $urlRouterProvider,$httpProvider){
+
+    // For any unmatched url, send to /route1
+    $urlRouterProvider.otherwise("/login");
+    $httpProvider.interceptors.push('timestampMarker');
+    $stateProvider
+            .state('login',{
+              url        : "/login",
+              templateUrl : "login.html",
+              controller  : 'loginController'
+            })
+            .state('404',{
+              url        : "/404",
+              templateUrl : "httpFailed.html",
+              controller  : function($scope,$stateParams){
+                $scope.returnMes=$stateParams.returnMes;
+              },
+              params:{returnMes:{}}
+            })
+            .state('loginSuccess.404',{
+              url        : "/loginSuccess404",
+              templateUrl : "httpFailed.html",
+              controller  : function($scope,$stateParams){
+                $scope.returnMes=$stateParams.returnMes;
+              },
+              params:{returnMes:{}}
+            })
+         .state('loginSuccess',{
+              url        : '/loginSuccess',
+              templateUrl : 'loginSuccess.html',
+           controller:'loginSuccessController',
+           params:{params:{}}
+            })
+
+            .state('loginSuccess.userInfo', {
+              url: "/userInfo",
+              templateUrl: "template/userInfo.html",
+              controller:'userInfoController',
+              resolve:{
+              response:  function($http,localStorageService,$state){
+
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.pagesize=8;
+                  serialData.page=1;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/user/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                              'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                             // 'Date':new Date().toUTCString(),
+              },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+            .state('loginSuccess.agreement', {
+              url: "/agreement",
+              templateUrl: "template/agreement.html",
+              controller:'agreementController',
+              resolve:{
+                userProtocol : function (postData) {
+                  var url = 'https://api.hylaa.com/admin/agreement/detail';
+                  return postData.postService(url, {body:{}});
+                }
+              }
+            })
+            .state('loginSuccess.sysMessage',{
+              url:"/sysMessage",
+              templateUrl:"template/sysMessage.html",
+              controller:"sysMessageController",
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.pagesize=12;
+                  serialData.page=1;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/sysMessage/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                              'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              // 'Date':new Date().toUTCString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+
+            .state('loginSuccess.suggestion',{
+              url:"/suggestion",
+              templateUrl:"template/suggestion.html",
+              controller:"suggestionController",
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.pagesize=12;
+                  serialData.page=1;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/suggestion/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                              'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              // 'Date':new Date().toUTCString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+            .state('loginSuccess.userDetail', {
+              url: "/userDetail",
+              templateUrl: "template/userDetail.html",
+              controller:'userDetailController',
+              params:{user:{}},
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+
+                  serialData.user_id=localStorageService.get('editedUser').id;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/user/detail',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                              'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              // 'Date':new Date().toUTCString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+            .state('loginSuccess.lessonInfo', {
+              url: "/lessonInfo",
+              templateUrl: "template/lessonInfo.html",
+              controller:'lessonInfoController',
+              resolve : {
+                courseList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '12',
+                    page : '1'
+                  }, url = 'https://api.hylaa.com/admin/course/list';
+                  return postData.postService(url, {body:data});
+                },
+                ]
+              }
+            })
+            .state('loginSuccess.lessonType', {
+              url : '/lessonType',
+              templateUrl : 'template/lessonType.html',
+              controller : 'lessonTypeController',
+              resolve : {
+                lessonTypeList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '10',
+                    page : '1'
+                  }, url = 'https://api.hylaa.com/admin/courseType/list';
+                  return postData.postService(url, {body:data});
+                },
+                ]
+              }
+            })
+            .state('loginSuccess.editLessonType', {
+              url: "/lessonType/edit/:id",
+              templateUrl: "template/editLessonType.html",
+              controller:'editLessonTypeController',
+              controllerAs : 'cm',
+              resolve : {
+                lessonType : ['$stateParams', 'postData', function ($stateParams, postData) {
+                  //todo call service to get lessonInfo
+                  if ($stateParams.id) {
+                    var url = 'https://api.hylaa.com/admin/courseType/detail';
+                    var data = {id : $stateParams.id};
+                    return postData.postService(url, {body:data});
+                  } else {
+                    var type = {
+                      type_name : '',
+                      url : '',
+                      desc : ''
+                    };
+                    return {body :type};
+                  }
+                }]}
+            })
+            .state('loginSuccess.signInInfo', {
+              url : '/signInInfo',
+              templateUrl : 'template/signInInfo.html',
+              controller : 'signInInfoController',
+              resolve : {
+                signInInfoList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '10',
+                    page : '1',
+                    date : new Date()
+                  }, url = 'https://api.hylaa.com/admin/course/register';
+                  return postData.postService(url, {body:data});
+                }]
+              }
+            })
+            .state('loginSuccess.lessonFeedback', {
+              url : '/lessonFeedback',
+              templateUrl : 'template/lessonFeedback.html',
+              controller : 'lessonFeedbackController',
+              resolve : {
+                lessonFeedbackList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '12',
+                    page : '1'
+                  }, url = 'https://api.hylaa.com/admin/feedback/list';
+                  return postData.postService(url, {body:data});
+                }]
+              }
+            })
+            .state('loginSuccess.feedbackDetail', {
+              url : '/feedbackDetail/:id',
+              templateUrl : 'template/feedbackDetail.html',
+              controller : 'feedbackDetailController',
+              resolve : {
+                feedbackDetail : ['$stateParam', 'postData', function ($stateParam, postData) {
+                  var url = 'https://api.hylaa.com/admin/feedback/detail';
+                  var data = {feedback_id : $stateParams.id};
+                  return postData.postService(url, {body:data});
+                }]
+              }
+            })
+            .state('loginSuccess.editLessonDetail', {
+              url: "/lessonDetail/edit/:id",
+              templateUrl: "template/editLesson.html",
+              controller:'lessonDetailController',
+              controllerAs : 'cm',
+              resolve : {
+                course : ['$stateParams', 'postData', function ($stateParams, postData) {
+                  //todo call service to get lessonInfo
+                  if ($stateParams.id) {
+                    var url = 'https://api.hylaa.com/admin/course/detail';
+                    var data = {course_id : $stateParams.id};
+                    return postData.postService(url, {body:data});
+                  } else {
+                    var course = {
+                      "teacher_id": '',
+                      "name": "",
+                      "address": "",
+                      "level": "",
+                      "totle_price": "",
+                      "unit_price": "",
+                      "max_student": "",
+                      "times" : "",
+                      "remark": "",
+                      "class_list": [{
+                        id : 1,
+                        class_name : '',
+                        class_time : '',
+                        class_content : ''
+                      }]
+                    };
+                    return {body :course};
+
+                  }
+
+                }],
+                teacherList : ['postData', function (postData) {
+                  var data = {}, url = 'https://api.hylaa.com/admin/teacher/list';
+                  return postData.postService(url, {body:data});
+                }],
+                lessonTypeList : ['postData', function (postData) {
+                  var data = {}, url = 'https://api.hylaa.com/admin/courseType/list';
+                  return postData.postService(url, {body:data});
+                }],
+              }
+            })
+            .state('loginSuccess.lessonHomepage', {
+              url: "/lessonHomepage",
+              templateUrl: "template/lessonHomepage.html",
+              controller:'lessonHomepageController',
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.image_to=1;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/image/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                               'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              //'Date':new Date().toString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+            .state('loginSuccess.instrumentInfo', {
+              url: "/instrumentInfo",
+              templateUrl: "template/instrumentInfo.html",
+              controller:'instrumentInfoController',
+              resolve : {
+                instrumentList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '12',
+                    page : '1'
+                  }, url = 'https://api.hylaa.com/admin/instrument/list';
+                  return postData.postService(url, {body:data});
+                },
+                ]
+              }
+            })
+            .state('loginSuccess.instrumentDetail', {
+              url: "/instrumentDetail/:id",
+              templateUrl: "template/instrumentDetail.html",
+              controller:'instrumentDetailController',
+              resolve : {
+                instrument : ['$stateParams', 'postData', function ($stateParams, postData) {
+                  //todo call service to get instrument
+                  if ($stateParams.id) {
+                    var url = 'https://api.hylaa.com/admin/instrument/detail';
+                    var data = {instrument_id : $stateParams.id};
+                    return postData.postService(url, {body:data});
+                  } else {
+                    var instrument = {
+
+                    };
+                    return {body :instrument};
+
+                  }
+
+                }],
+                instrumentTypeList : ['postData', function (postData) {
+                  var data = {}, url = 'https://api.hylaa.com/admin/instrumentType/list';
+                  return postData.postService(url, {body:data});
+                }]
+              }
+            })
+            .state('loginSuccess.instrumentClassify', {
+              url: "/instrumentClassify",
+              templateUrl: "template/instrumentClassify.html",
+              controller:'instrumentClassifyController',
+              resolve : {
+                instrumentTypeList : ['postData', function (postData) {
+                  var data = {
+                    pagesize : '10',
+                    page : '1'
+                  }, url = 'https://api.hylaa.com/admin/instrumentType/list';
+                  return postData.postService(url, {body:data});
+                },
+                ]
+              }
+            })
+            .state('loginSuccess.instrumentHomepage', {
+              url: "/instrumentHomepage",
+              templateUrl: "template/instrumentHomepage.html",
+              controller:'instrumentHomepageController',
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.image_to=2;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/image/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                               'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              //'Date':new Date().toString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+            .state('loginSuccess.orderList', {
+              url : '/orderList',
+              templateUrl : 'template/orderList.html',
+              controller : 'OrderListController',
+              resolve : {
+                orderList : ['postData', function (postData) {
+                  var searchCriteria = {
+                    pagesize : 9,
+                    page : 1,
+                    order_type : 'ALL',
+                    order_status : '',
+                  }, url = 'https://api.hylaa.com/admin/order/list';
+                  return postData.postService(url, {body : searchCriteria});
+                }]
+              }
+            })
+            .state('loginSuccess.orderDetail', {
+              url : '/orderDetail/:id',
+              templateUrl : 'template/orderDetail.html',
+              controller : 'OrderDetailController',
+              resolve: {
+                data: ['$stateParams','postData', function($stateParams,postData){
+                  var url = 'https://api.hylaa.com/admin/order/detail';
+                  var data = {order_id : $stateParams.id, order_type : 'ALL'};
+                  return postData.postService(url, {body:data});
+                }]
+              },
+            })
+            .state('loginSuccess.helpCenter', {
+              url : '/helpCenter',
+              templateUrl : 'template/helpCenter.html',
+              controller : 'helpCenterController',
+              resolve:{
+                response:  function($http,localStorageService,$state){
+                  var pData1=new Object();
+                  var serialData=new Object();
+                  serialData.pagesize=12;
+                  serialData.page=1;
+                  serialData.admin_id=localStorageService.get('adminId');
+                  pData1.body=serialData;
+                  var url1 = 'https://api.hylaa.com/admin/helpCenter/list',
+                          data1 = pData1;
+                  transFn1 = function(data) {
+                    return $.param(data);
+                  },
+                          postCfg1 = {
+                            headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                              'Authorization' :'Bearer '+localStorageService.get('accessToken'),
+                              'X-GTEDX-Integrity':'GSign '+localStorageService.get('accessToken'),
+                              // 'Date':new Date().toUTCString(),
+                            },
+                            transformRequest: transFn1,
+                            withCredentials:true,
+                          };
+                  return $http.post(url1, data1, postCfg1).success(function(res,status){
+                    return res;
+                  }).error(function(data,status){
+                    var returnMes=new Object();
+                    returnMes.status=status;
+                    returnMes.message=data.error.message;
+                    $state.go('loginSuccess.404',{returnMes:returnMes});
+                  });
+                }
+              }
+            })
+
+
+  })
+
+
+</script>
+
+</body>
+
+</html>

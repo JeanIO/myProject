@@ -1,0 +1,26 @@
+<h1>系统消息列表</h1>
+<p class="clearfix"> <a class="cursor pull-left"   ng-click="addSysMessage()"><i class="glyphicon glyphicon-plus" ></i>新增系统消息</a></p>
+<div ng-repeat="sysMessage in sysMessages" class="col-md-4" style="margin-top: 20px">
+    <p><span>标题：{{sysMessage.title}}</span><span class="pull-right">创建时间：{{sysMessage.created_at}}</span></p>
+    <textarea class="form-control" ng-bind="sysMessage.content" rows="5"  style="cursor:default" disabled></textarea>
+</div>
+<div class="col-md-12">
+<pagination num-pages="page_num" current-page="page" class="pagination"></pagination>
+</div>
+<div class="dialog" ng-show="addSysMessageDialog">
+    <h3>新增系统消息<i class="glyphicon glyphicon-remove cursor pull-right" ng-click="cancelSysMessageDialog()"></i></h3>
+    <div class="input-group">
+        <span class="input-group-addon">标题：</span> <input type="text" ng-model="newSysMessage.title" class="form-control"/>
+    </div>
+    <div class="input-group">
+        <p class="input-group-addon">内容：</p>
+        <textarea ng-model="newSysMessage.content" rows="5" class="form-control"></textarea>
+    </div>
+    <div class="input-group">
+       是否推送：</span><input type="checkbox" ng-model="newSysMessage.need_notify" />
+    </div>
+
+    <div class="input-group">
+        <button class="btn btn-info" style="margin-left:124px" type="button" ng-click="submitSysMessageDialog()">确认提交</button>
+    </div>
+</div>

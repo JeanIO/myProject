@@ -1,0 +1,196 @@
+
+
+<h1>乐器轮播图设置</h1>
+
+
+<div >
+    <div style="display: inline-block;float:left;width:1000px">
+    <p class="clearfix">
+        <a class="cursor pull-left"  ng-click="addInstrumentImage()" style="text-decoration: none;"><i class="glyphicon glyphicon-plus" ></i>新增轮播图</a>
+        <a class="cursor pull-left"  ng-click="showCarousel()" style="margin-left: 90px;text-decoration: none;"><i class="glyphicon glyphicon-eye-open"></i>&nbsp;效果预览</a>
+        </p>
+
+
+
+        <div ng-repeat="img in imgs " ng-mouseenter="hover = true"
+             ng-mouseleave="hover = false" style="width:200px;display:inline-block;padding:30px;float:left;border-bottom: 1px solid #e1e1e1;"  class="widget">
+            <h3 >轮播图{{$index+1}}<span class="pull-right"><i class="glyphicon glyphicon-remove cursor" ng-class="{true:'inline',false:'notDisplay'}[hover]" ng-click="remove(img)" title="删除课程"></i></span></h3>
+            <div style="margin-top: 20px;">
+                <h5>修改图片：</h5>
+                <img ng-src="{{img.image_url}}" id="instrumentCarousel{{$index+1}}" height="110px" width="110px"  />
+                <div class="editableIcons" ng-class="{true:'inline',false:'notDisplay'}[hover]" >
+                    <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;font-size: 20px;font-weight:700;vertical-align: bottom"></i>
+                    <input type="file" title="更改图片" new-upload-image="myFile"   style="margin-top:-20px;width:20px;height:20px;opacity: 0.1;margin-right:80px;cursor:pointer"/>
+                </div>
+            </div>
+            <h5>标题：</h5>
+            <input type="text" ng-model="img.title" class="form-control"/>
+            <h5>轮播图跳转url：</h5>
+            <input type="text" ng-model="img.jumping_url"style="margin-bottom: 20px" class="form-control"/>
+            <p>禁用：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" ng-model="img.forbid" ng-change="forbidOrNot(img)"/></p>
+            <div class="input-group">
+                <button class="btn btn-info" style="margin-left:20px" type="button" ng-click="edit(img,$index)">提交修改</button>
+            </div>
+
+         </div>
+    </div>
+
+
+</div>
+<div class="dialog" ng-show="addInstrumentImageDialog">
+    <h3>新增轮播图<i class="glyphicon glyphicon-remove cursor pull-right" ng-click="cancelAddInstrumentImageDialog()"></i></h3>
+    <div style="margin-top: 20px;position:relative">
+        <a class="cursor" ng-hide="imgExists" style="text-decoration: none"><i class="glyphicon glyphicon-plus" style="" ></i>添加背景图</a>
+        <input type="file"   new-upload-image="myFile2" ng-class="{true:'imgExist',false:'imgNotExist'}[imgExists]"/>
+        <img  height="110px" id="newImage2"  width="110px"/>
+        <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;font-size: 20px;font-weight:700;vertical-align: bottom" ng-show="imgExists"></i>
+
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><span style="color:red;">*</span>标题：</span> <input type="text" ng-model="newImage.title" class="form-control"/>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">跳转URL：</span><input type="text" ng-model="newImage.jumping_url" class="form-control"/>
+    </div>
+
+    <div class="input-group">
+        <button class="btn btn-info" style="margin-left:124px" type="button" ng-click="submitAddInstrumentImageDialog()">确认提交</button>
+    </div>
+</div>
+
+
+<div class="dialog" ng-show="showInstrumentCarouselDialog" style="width:670px;">
+    <h3>轮播图展示<i class="glyphicon glyphicon-remove cursor pull-right" ng-click="cancelInstrumentCarouselDialog()"></i></h3>
+    <div style="width:600px;height:400px;margin-bottom:20px;display: inline-block;float:left ">
+        <div uib-carousel active="0" interval="500" no-wrap="false" >
+            <div uib-slide ng-repeat="slide in slides" index="slide.id">
+                <img ng-src="{{slide.src}}" style="margin:auto;width:600px;height:400px">
+                <div class="carousel-caption">
+                    <p>{{slide.title}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<h1>乐器轮播图更改</h1>
+
+
+<div >
+    <div uib-carousel active="0" interval="500" no-wrap="false" style="width:800px">
+        <div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
+            <img ng-src="{{slide.src}}" style="margin:auto;">
+            <div class="carousel-caption">
+                <p>{{slide.instrumentName}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+        <div ng-mouseenter="hover1 = true"
+             ng-mouseleave="hover1= false" style="width:200px;display:inline-block;padding:30px;float:left">
+            <h3 >轮播图1</h3>
+            <div style="margin-top: 20px;">
+                <h5>修改图片：</h5>
+                <img ng-src="{{imgs[0].src}}" height="110px" width="110px"  />
+                <div class="editableIcons" ng-class="{true:'inline',false:'notDisplay'}[hover1]" >
+                    <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;;font-size: 20px;font-weight:700;vertical-align: bottom"></i>
+
+                    <input type="file" title="更改图片" upload-image="myFile" id="1" style="margin-top:-20px;width:20px;height:20px;opacity: 0.1;margin-right:80px;cursor:pointer"/>
+                </div>
+            </div>
+            <h5>乐器名称：</h5>
+            <input type="text" ng-model="imgs[0].instrumentName" class="form-control"/>
+        </div>
+
+        <div ng-mouseenter="hover2 = true"
+             ng-mouseleave="hover2= false" style="width:200px;display:inline-block;padding:30px;float:left">
+            <h3 >轮播图2</h3>
+            <div style="margin-top: 20px;">
+                <h5>修改图片：</h5>
+                <img ng-src="{{imgs[1].src}}" height="110px" width="110px"  />
+                <div class="editableIcons" ng-class="{true:'inline',false:'notDisplay'}[hover2]">
+                    <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;;font-size: 20px;font-weight:700;vertical-align: bottom"></i>
+                    <input type="file" title="更改图片" upload-image="myFile" id="2" style="margin-top:-20px;width:20px;height:20px;opacity: 0.1;margin-right:80px;cursor:pointer"/>
+                </div>
+            </div>
+
+            <h5>乐器名称：</h5>
+            <input type="text" ng-model="imgs[1].instrumentName" class="form-control"/>
+
+        </div>
+        <div ng-mouseenter="hover3 = true"
+             ng-mouseleave="hover3= false" style="width:200px;display:inline-block;padding:30px;float:left">
+            <h3 >轮播图3</h3>
+            <div style="margin-top: 20px;">
+                <h5>修改图片：</h5>
+                <img ng-src="{{imgs[2].src}}" height="110px" width="110px"  />
+                <div class="editableIcons" ng-class="{true:'inline',false:'notDisplay'}[hover3]">
+                    <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;;font-size: 20px;font-weight:700;vertical-align: bottom"></i>
+                    <input type="file" title="更改图片" upload-image="myFile" id="3" style="margin-top:-20px;width:20px;height:20px;opacity: 0.1;margin-right:80px;cursor:pointer"/>
+                </div>
+            </div>
+            <h5>乐器名称：</h5>
+            <input type="text" ng-model="imgs[2].instrumentName" class="form-control"/>
+        </div>
+        <div ng-mouseenter="hover4 = true"
+             ng-mouseleave="hover4= false" style="width:200px;display:inline-block;padding:30px;float:left">
+            <h3 >轮播图4</h3>
+            <div style="margin-top: 20px;">
+                <h5>修改图片：</h5>
+                <img ng-src="{{imgs[3].src}}" height="110px" width="110px"  />
+                <div class="editableIcons" ng-class="{true:'inline',false:'notDisplay'}[hover4]">
+                    <i class="glyphicon glyphicon-edit "  style="margin-left: -113px;;font-size: 20px;font-weight:700;vertical-align: bottom"></i>
+                    <input type="file" title="更改图片" upload-image="myFile" id="4" style="margin-top:-20px;width:20px;height:20px;opacity: 0.1;margin-right:80px;cursor:pointer"/>
+                </div>
+            </div>
+            <h5>乐器名称：</h5>
+            <input type="text" ng-model="imgs[3].instrumentName" class="form-control"/>
+        </div>
+    </div>
+    <button class="btn btn-info" style="margin-left:350px;" type="button" ng-click="submitCarousel()">提交修改</button>
+</div>
+-->

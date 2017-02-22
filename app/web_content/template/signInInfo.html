@@ -1,0 +1,50 @@
+<h1>学生签到列表</h1>
+<form class="form-horizontal col-md-6">
+
+
+    <div class="col-md-6">
+        <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="dt" is-open="popup2.opened" datepicker-options="dateOptions" close-text="Close" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+            </div>
+    <div class="col-md-6">
+        <p class="input-group">
+            <button class="btn btn-info" ng-click="search()">搜索</button>
+        </p>
+        </div>
+
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>课程名称</th>
+                    <th>上课时间</th>
+                    <th>老师</th>
+                    <th>签到状态</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="signInfo in signInInfoList">
+                    <td>{{$index+1}}</td>
+                    <td><a ui-sref="loginSuccess.editLessonDetail({id:signInfo.course.id})">{{signInfo.course.name}}</a></td>
+                    <td>{{signInfo.course.class_time}}</td>
+                    <td>{{signInfo.teacher.teacher_name}}</td>
+                    <td>{{signInfo.registered ? '已签到' : '未签到'}}</td>
+                </tr>
+                </tbody>
+
+            </table>
+            <pagination num-pages="page_num" current-page="page" on-select-page="selectPage(page)" class="pagination"></pagination>
+        </div>
+    </div>
+</div>

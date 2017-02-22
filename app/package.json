@@ -1,0 +1,29 @@
+{
+  "main": "app://pinyin_frontend_admin/web_content/index.html",
+  "name": "品音客户端",
+  "description": "阿里云Open Table Store",
+  "version": "0.1.0",
+  "keywords": [
+
+  ],
+  "chromium-args": "--disable-web-security",
+  "user-agent": "Mozilla/5.0 (%osinfo) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%webkit_ver Safari/537.36 nw(%nwver) OTS(%ver)",
+  "window": {
+    "show": true,
+    "title": "品音客户端",
+    "icon": "icon.ico",
+    "toolbar": true,
+    "frame": true,
+    "width": 1350,
+    "height": 800,
+    "position": "center",
+    "min_width": 1350,
+    "min_height": 800
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "dependencies": {
+    "protobufjs": "^5.0.1"
+  }
+}

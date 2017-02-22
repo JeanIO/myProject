@@ -1,0 +1,53 @@
+<h1>课程信息详情</h1>
+<div class="container"style="width:400px">
+
+    <img ng-src="{{lessonImgSrc}}" width="300px" style="margin-right:18px" />
+
+    <div class="input-group">
+        <span class="input-group-addon">课程名称：</span> <input type="text" ng-model="lessonName" class="form-control" disabled/>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">难度等级：</span> <input type="text" ng-model="lessonDifficultyLevel" class="form-control" disabled/>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">老师：</span> <input type="text" ng-model="lessonTeacher" class="form-control" disabled/>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">地点：</span> <input type="text" ng-model="lessonAddress" class="form-control" disabled/>
+    </div>
+<div class="input-group" style="margin-bottom: 20px">
+    <span class="input-group-addon">价格：</span> <input type="text" ng-model="lessonPrice" class="form-control"/>
+</div>
+    <a class="cursor"><i class="glyphicon glyphicon-plus" ng-click="addLessonPeriod()"></i>新增课时</a>
+<div   ng-repeat="lessonPeriod in lessonPeriods" style="padding-bottom: 20px;">
+    <div ng-mouseenter="hover = true"  ng-mouseleave="hover= false" style="position:relative">
+    <p class="input-group-addon">课时{{lessonPeriod.number}}</p>
+        <div style="border: 1px solid #CCCCCC;padding-right:12px;border-radius:4px">
+        <span>上课时间:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{data.lessontime|date:'yyyy-MM-dd hh:mm a'}}</span>&nbsp;&nbsp;&nbsp;
+            <div class="dropdown" style="display: inline">
+        <a  class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#">
+
+        </a>
+        <ul class="dropdown-menu" role="menu">
+
+        </ul>
+
+                <i class="glyphicon glyphicon-pencil cursor"   title=""  style="" ng-click="isCollapsed = !isCollapsed"></i>
+                <hr>
+                    <div uib-collapse="isCollapsed">
+                        <datetimepicker data-ng-model="data.lessontime" />
+
+    </div>
+        </div>
+
+        <p style="margin-bottom: 0px;border:1px solid #CCCCCC;border-radius: 4px;border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom: none">课时内容：</p>
+        <textarea ng-model="lessonPeriod.content" class="form-control" style="border-top: none;border-top-left-radius: 0;border-top-right-radius: 0"></textarea>
+        <i class="glyphicon glyphicon-remove cursor" ng-click=""  ng-class="{true:'inline',false:'notDisplay'}[hover]" style="position:absolute;top:60px;left:165px;font-size: 40px" title="删除课时"></i>
+    </div>
+
+
+</div>
+
+
+
+</div>

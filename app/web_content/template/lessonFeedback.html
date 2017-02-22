@@ -1,0 +1,47 @@
+<h1>课程反馈列表</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>课程名称</th>
+                    <th>反馈内容</th>
+                    <th>学生作品</th>
+                    <th>反馈时间</th>
+                    <th>老师回复</th>
+                    <th>回复时间</th>
+                    <th>状态</th>
+                    <th class="text-right">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="feedback in feedbackList">
+                    <td>{{$index+1}}</td>
+                    <td>{{feedback.course_name}}</td>
+
+                    <td>{{feedback.content}}</td>
+                    <td>
+                        <div ng-if="feedback.video.length==0"></div>
+                        <div ng-repeat="v in feedback.video">
+                            <a href="{{v}}" target="_blank">视频{{$index+1}}</a>
+                        </div>
+                    </td>
+                    <td>{{feedback.time}}</td>
+                    <td>{{feedback.answer}}</td>
+                    <td>{{feedback.answer_time}}</td>
+                    <td>{{feedback.status == '1'? '未审核' : '已审核'}}</td>
+                    <td class="text-right">
+                        <button type="button" class="btn btn-primary" ng-click="checkFeedback(feedback)">{{feedback.status =='1'?'审核':'取消审核'}}</button>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+            <pagination num-pages="page_num" current-page="currentPage" class="pagination-small"></pagination>
+        </div>
+    </div>
+</div>

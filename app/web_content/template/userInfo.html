@@ -1,0 +1,41 @@
+
+<h1>用户列表</h1>
+<div class="widget clearfix">
+<table class="table table-hover" style="margin-top:20px;margin-bottom:0">
+    <caption></caption>
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>用户名</th>
+        <th>角色</th>
+        <th>创建时间</th>
+        <th>禁用</th>
+        <th>重置密码</th>
+        <th>是否设为推荐老师</th>
+        <th>进入详情</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="user in users">
+        <td>{{$index+1}}</td>
+        <td><span class="form-control" ng-bind="user.username"></span></td>
+
+        <td><select ng-model="user.role" ng-change="changeRole(user)" class="form-control" >
+                <option value="4">管理员</option>
+                <option value="2">老师</option>
+                <option value="1">普通用户</option>
+            </select></td>
+        <td><span class="form-control" ng-bind="user.created_at"></span></td>
+        <td style="width:60px;"><input type="checkbox" ng-checked="user.status!=4" ng-click="forbidOrNot(user)"/></td>
+        <td style="width:120px;"><a class="cursor" style="text-decoration: none" ng-click="resetPassword(user)">reset</a></td>
+        <td><i class="glyphicon" style="font-size:25px;cursor:pointer;color:red"  ng-if="user.role==2"  ng-class="{true:'glyphicon-heart',false:'glyphicon-heart-empty'}[user.recommend==1]" ng-click="recommendOrNot(user)" ></i></td>
+        <td style="width:120px;"><a class="cursor" style="text-decoration: none" ng-click="toDetail(user)">进入详情</a></td>
+    </tr>
+
+    </tbody>
+
+</table>
+    <div class="col-md-12">
+        <pagination num-pages="page_num" current-page="page" class="pagination"></pagination>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<h1>{{lessonType.id ? '修改课程分类' : '新增课程分类'}}</h1>
+<div class="row" >
+    <div class="col-xs-12 col-sm-12 col-md-10">
+        <div class="widget">
+            <form novalidate role="form" id="myForm" name="lessonTypeForm" class="form-horizontal" ng-submit="lessonTypeForm.$valid && createCourseType()" >
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">课程分类名称<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="lessonType.type_name" name="name" id="name" class="form-control"
+                               required ng-minlength="2" ng-maxlength="50"/>
+                        <div ng-show="lessonTypeForm.name.$invalid && (lessonTypeForm.name.$dirty || lessonTypeForm.$submitted)">
+                            <small class="error" ng-show="lessonTypeForm.name.$error.required">课程分类名称是必填项</small>
+                            <small class="error" ng-show="lessonTypeForm.name.$error.minlength">课程分类名称最小字符数是2</small>
+                            <small class="error" ng-show="lessonTypeForm.name.$error.maxlength">课程分类名称最大字符数是50</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="desc" class="col-sm-2 control-label">描述<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <textarea type="text" ng-model="lessonType.desc" name="desc" id="desc" class="form-control"
+                                ng-maxlength="500"></textarea>
+                        <div ng-show="lessonTypeForm.address.$invalid && (lessonTypeForm.desc.$dirty || lessonTypeForm.$submitted)">
+
+                            <small class="error" ng-show="lessonTypeForm.desc.$error.maxlength">上课地址最大字数是500</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label  class="col-sm-2 control-label">上传图片</label>
+                    <div class="col-sm-4">
+                        <input type="file" upload-image="myFile" class="form-control">
+                    </div>
+                    <img  ng-src="{{lessonType.url}}" width="110px" height="110px" alt="">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-lg btn-primary pull-right" >提交</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,52 @@
+
+
+
+<div class="login">
+  <div class="content">
+    <h3 style="text-align:center">登录</h3>
+  </div>
+  <form name="myForm"  novalidate>
+    <div class="content has-feedback">
+      <input type="tel" class="form-control"  name="userName" ng-model="userName"
+             required
+
+             ng-minlength="11"
+             ng-maxlength="11" placeholder="用户名"/>
+<span class="glyphicon glyphicon-ok form-control-feedback"
+      ng-show="myForm.userName.$dirty && myForm.userName.$valid" style="top:20px;padding-right: 45px"></span>
+      <span style="color:red" ng-show="myForm.userName.$dirty&&myForm.userName.$invalid">
+        <span ng-show="myForm.userName.$error.required">用户名是必须的</span>
+        <span ng-show="myForm.userName.$error.minlength">请输入正确的手机号</span>
+        <span ng-show="myForm.userName.$error.maxlength">请输入正确的手机号</span>
+      </span>
+    </div>
+    <div class="content has-feedback">
+      <input type="password" class="form-control" name="password" ng-model="password"
+             required
+             ng-required="true"
+             ng-minlength="6"
+             ng-maxlength="15"  placeholder="密码"/>
+      <span class="glyphicon glyphicon-ok form-control-feedback"
+            ng-show="myForm.password.$dirty && myForm.password.$valid" style="top:20px;padding-right: 45px"></span>
+      <span style="color:red" ng-show="myForm.password.$dirty&&myForm.password.$invalid">
+        <span ng-show="myForm.password.$error.required">请输入密码</span>
+        <span ng-show="myForm.password.$error.minlength">密码不少于6位</span>
+        <span ng-show="myForm.password.$error.maxlength">密码不超过15位</span>
+      </span>
+    </div>
+
+        <div  id="drag" >
+        </div>
+
+      <div ng-show="needSlide" class="needSlide">请拖动滑块验证</div>
+    <div class="content">
+      <button class="btn btn-info" id="loginSubmit" type="button"  ng-click="submit()">登录</button>
+    </div>
+
+  </form>
+  {{list}}
+</div>
+
+<script type="text/javascript">
+    $('#drag').drag();
+</script>

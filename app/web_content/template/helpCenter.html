@@ -1,0 +1,26 @@
+<h1>帮助消息列表</h1>
+<p class="clearfix"> <a class="cursor pull-left"   ng-click="addHelpCenter()"><i class="glyphicon glyphicon-plus" ></i>新增帮助消息</a></p>
+<div ng-repeat="helpCenter in helpCenters" class="col-md-4" style="margin-top: 20px">
+    <p><span>类型：{{helpCenter.title}}</span><span class="pull-right">创建时间：{{helpCenter.created_at}}</span></p>
+    <textarea class="form-control" ng-bind="helpCenter.content" rows="5" style="cursor:default" disabled></textarea>
+</div>
+<div class="col-md-12">
+    <pagination num-pages="page_num" current-page="page" class="pagination"></pagination>
+</div>
+<div class="dialog" ng-show="addHelpCenterDialog">
+    <h3>新增帮助中心<i class="glyphicon glyphicon-remove cursor pull-right" ng-click="cancelHelpCenterDialog()"></i></h3>
+    <div class="input-group">
+        <span class="input-group-addon">标题：</span> <input type="text" ng-model="newHelpCenter.title" class="form-control"/>
+    </div>
+    <div class="input-group">
+        <p class="input-group-addon">内容：</p>
+        <textarea ng-model="newHelpCenter.content" rows="5" class="form-control" maxlength="200"></textarea>
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon">内容链接：</span><input type="text" ng-model="newHelpCenter.url" class="form-control"/>
+    </div>
+
+    <div class="input-group">
+        <button class="btn btn-info" style="margin-left:124px" type="button" ng-click="submitHelpCenterDialog()">确认提交</button>
+    </div>
+</div>

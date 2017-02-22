@@ -1,0 +1,8 @@
+<h1>投诉建议列表</h1>
+<div ng-repeat="suggestion in suggestions" class="col-md-4" style="margin-top: 20px">
+    <p><span>类型：{{suggestion.suggestion_type}}</span><span class="pull-right">创建时间：{{suggestion.created_at}}</span></p>
+    <textarea class="form-control" ng-bind="suggestion.content" rows="5" style="cursor:default" disabled></textarea>
+</div>
+<div class="col-md-12">
+    <pagination num-pages="page_num" current-page="page" class="pagination"></pagination>
+</div>

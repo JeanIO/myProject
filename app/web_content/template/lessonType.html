@@ -1,0 +1,35 @@
+
+
+<h1>课程分类列表</h1>
+
+<div class="widget">
+    <div class="row">
+        <div class="col-md-12">
+
+            <a class="cursor" ui-sref="loginSuccess.editLessonType({id : null})"><i class="glyphicon glyphicon-plus" style=""></i>新增课程分类</a>
+            <div ng-repeat="lessonType in lessonTypes">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4"  >
+                    <div class="col-sm-12" style="border:1px solid #E5E9EC; padding:5px;margin:5px;min-width:225px;">
+                        <div class="col-sm-12" style="min-width:300px;">
+                            <div class="col-sm-5" style="min-width: 140px;">
+                                <img ng-src="{{lessonType.url}}" height="140px" width="140px"  class="pull-left"/>
+                            </div>
+                            <div class="col-sm-7">
+                                <p ng-bind="lessonType.type_name"></p>
+                                <p style="word-break: break-all;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                    描述：<span ng-bind="lessonType.desc"></span></p>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12" style="min-width: 300px;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil cursor" ui-sref="loginSuccess.editLessonType({id : lessonType.id})" title="修改课程分类"></i>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-trash cursor" ng-click="remove(lessonType)" title="删除课程分类"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

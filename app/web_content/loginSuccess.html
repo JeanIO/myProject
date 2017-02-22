@@ -1,0 +1,121 @@
+
+<div ng-class="{true:'opacityBG',false:'notDisplay'}[dialog]"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <uib-accordion close-others="true">
+                <div uib-accordion-group class="panel-default"  is-open="status[0].open" is-disabled="">
+                    <uib-accordion-heading>
+                        <div style="cursor:pointer">
+                        课程管理
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[0].open, 'glyphicon-chevron-right': !status[0].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul id='lessonManage'  class='nav nav-list  secondmenu' >
+                        <li ><a ui-sref='.lessonInfo'>课程信息管理</a></li>
+                        <li ><a ui-sref='.lessonType'>课程分类管理</a></li>
+                        <li ><a ui-sref='.lessonFeedback'>课程反馈管理</a></li>
+                        <li><a ui-sref='.lessonHomepage'>课程轮播图管理</a></li>
+                        <li><a ui-sref=".signInInfo">学生签到管理</a></li>
+                    </ul>
+
+                </div>
+                <div uib-accordion-group class="panel-default" is-open="status[1].open" >
+                    <uib-accordion-heading>
+                        <div style="cursor:pointer">
+                        乐器管理
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[1].open, 'glyphicon-chevron-right': !status[1].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul  class="nav nav-list secondmenu" >
+                        <li><a ui-sref=".instrumentInfo">乐器信息管理</a></li>
+                        <li><a ui-sref=".instrumentClassify">乐器分类管理</a></li>
+                        <li><a ui-sref=".instrumentHomepage">乐器轮播图管理</a></li>
+                    </ul>
+                </div>
+                <div uib-accordion-group class="panel-default" is-open="status[2].open" >
+                    <uib-accordion-heading>
+                        <div style="cursor:pointer">
+                        订单管理
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[2].open, 'glyphicon-chevron-right': !status[2].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul  class="nav nav-list secondmenu" >
+                        <li><a ui-sref=".orderList">订单列表</a></li>
+                        <!--<li><a ui-sref=".instrumentClassify">乐器分类管理</a></li>-->
+                        <!--<li><a ui-sref=".instrumentHomepage">乐器首页管理</a></li>-->
+                    </ul>
+                </div>
+
+                <div uib-accordion-group class="panel-default"  is-open="status[3].open">
+                <uib-accordion-heading>
+                    <div style="cursor:pointer">
+                    用户管理
+
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[3].open, 'glyphicon-chevron-right': !status[3].open}"></i>
+                    </div>
+                </uib-accordion-heading>
+                <ul  class="nav nav-list secondmenu" >
+                    <li><a ui-sref=".userInfo">用户信息管理</a></li>
+                    <li><a ui-sref=".agreement">用户协议管理</a></li>
+                </ul>
+            </div>
+               <!-- <div uib-accordion-group class="panel-default" is-open="status[4].open" >
+                    <uib-accordion-heading>
+                        <div style="cursor:pointer">
+                        作品管理
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[4].open, 'glyphicon-chevron-right': !status[4].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul  class="nav nav-list secondmenu" >
+                        <li><a ui-sref=".instrumentInfo">乐器信息管理</a></li>
+                        <li><a ui-sref=".instrumentClassify">乐器分类管理</a></li>
+                        <li><a ui-sref=".instrumentHomepage">乐器首页管理</a></li>
+                    </ul>
+                </div>-->
+                <div uib-accordion-group class="panel-default" is-open="status[5].open" >
+                    <uib-accordion-heading>
+                        <div style="cursor:pointer">
+                        系统管理
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[5].open, 'glyphicon-chevron-right': !status[5].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul  class="nav nav-list secondmenu" >
+                        <li><a ui-sref=".suggestion">投诉建议管理</a></li>
+                        <li><a ui-sref=".helpCenter">帮助中心管理</a></li>
+                        <li><a ui-sref=".sysMessage">系统消息管理</a></li>
+
+                    </ul>
+                </div>
+                <!--div uib-accordion-group class="panel-default" is-open="status[6].open">
+                    <uib-accordion-heading >
+                        <div style="cursor:pointer">
+                        推送管理
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status[6].open, 'glyphicon-chevron-right': !status[6].open}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <ul  class="nav nav-list secondmenu" >
+                        <li><a ui-sref=".instrumentInfo">个人推送管理</a></li>
+                        <li><a ui-sref=".instrumentClassify">多人推送管理</a></li>
+                        <li><a ui-sref=".instrumentHomepage">广播推送管理</a></li>
+                    </ul>
+                </div>-->
+
+            </uib-accordion>
+           </div>
+        <div class="col-md-9">
+             <ui-view>
+             </ui-view>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,121 @@
+<h1>订单详情</h1>
+<div class="col-sm-12 col-md-6" style="color:gray;font-size: 20px">
+    <div class="col-sm-12">
+        <div class=" text-left" style="background: rgb(151,200,205);">
+            <div style="color:white;font-size:25px;font-weight: bold; padding: 10px;">订单状态：{{orderDetail.order_status_name}} {{orderDetail.reason ? '(' + orderDetail.reason + ')'  : ''}}</div>
+        </div>
+
+        <div ng-show="orderDetail.delivery_info">
+            <div class="col-sm-12 borderBox">
+                <div class="col-sm-2" style="padding: 10px; margin: 10px 0px; min-width: 140px;">
+                    <img src="./images/position.png" alt="">
+                    <span class="text-center blackText">配送信息</span>
+                </div>
+                <div class="col-sm-8" style="padding: 10px;">
+                    <div>收货人: {{orderDetail.delivery_info.receiver_name}}</div>
+                    <div>手机: {{orderDetail.delivery_info.receiver_phone}}</div>
+                    <div>地点: {{orderDetail.delivery_info.receiver_address}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 borderBox">
+            <div class="col-sm-3">
+                <img width="120px" height="120px" ng-src="{{orderDetail.image}}" alt="">
+            </div>
+            <div class="col-sm-9">
+                <div class="col-sm-12 blackText">
+                    <p>{{orderDetail.product_name}}</p>
+                </div>
+                <div class="col-sm-8">
+                    <p class="text-left">{{orderDetail.product_property}}</p>
+                </div>
+                <div class="col-sm-4 blackText">
+                    <p class="text-right">{{orderDetail.cost_price | currency:'¥'}}</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-sm-12 borderBox blackText">
+            <p class="text-left" style="display:inline;">实付</p>
+            <p class="text-right" style="display:inline;float:right">{{orderDetail.actual_pay | currency:'¥'}}</p>
+        </div>
+
+        <div class="col-sm-12 borderBox">
+            <div class="col-sm-2">
+                <span style="display:inline;">买家留言:</span>
+            </div>
+            <div class="col-sm-10">
+                <p  style="word-wrap:break-word; word-break:normal;display:inline;">{{orderDetail.buyer_message}}</p>
+            </div>
+        </div>
+        <div class="col-sm-12 borderBox" ng-hide="orderDetail.order_status==8 || orderDetail.order_status==16 ||orderDetail.order_status==64 || orderDetail.order_status==128">
+
+            <form  novalidate name="detailForm" ng-submit="changeStatus(orderDetail)" class="col-sm-12 form-horizontal" style="margin: 30px 30px;">
+                <div class="form-group">
+                    <label class="col-sm-2">修改订单状态:</label>
+                    <div class="col-sm-8">
+                        <select name="status" ng-model="selectedStatus" class="form-control"
+                                ng-options="statusOp.id as statusOp.name for statusOp in statusOps"></select>
+                    </div>
+
+                </div>
+
+                <div ng-show="selectedStatus ==64">
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <span style="font-size:14px;color:orange;">点击提交按钮跳转到付款页面</span>
+                            <button type="button" class="btn btn-danger pull-right" ng-click="refuseRefund(orderDetail)">取消退款</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div ng-show="selectedStatus ==128">
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <span style="font-size:14px;color:orange;">请确认收到退货后执行此操作，点击提交按钮后订单状态将变成已退款</span>
+                            <button type="button"  class="btn btn-danger pull-right" ng-click="refuseReturn(orderDetail)">取消退货</button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn  btn-primary pull-right" ng-disabled="detailForm.$submitted">提交</button>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+        <div class="col-sm-12 borderBox" ng-show="orderDetail.order_type == 'C'">
+            <legend><button class="btn btn-info" ng-disabled="classTimeArray" ng-click="showClassTime(orderDetail.order_id)">修改上课时间</button></legend>
+            <form  class="form-horizontal" ng-submit="updateClassTime(orderDetail.order_id)" ng-show="classTimeArray">
+
+                <div class="form-group"ng-repeat="classTime in classTimeArray">
+                    <label class="col-sm-2 control-label">第{{$index+1}}课时</label>
+                    <div class="dropdown form-group col-sm-8">
+                        <a class="dropdown-toggle" id="dropdown2"+classTime.id role="button" data-toggle="dropdown" >
+                            <div class="input-group date" style="padding-top: 0px;">
+                                <input type="text" class="form-control" ng-model="classTime.class_time | date : 'yyyy-MM-dd HH:mm:ss'" ng-readonly="classTime.registered=='1'">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" ng-hide="classTime.registered=='1'">
+                            <datetimepicker ng-model="classTime.class_time" data-datetimepicker-config="{ dropdownSelector: '#dropdown2'+classTime.id}"/>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn  btn-primary pull-right">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

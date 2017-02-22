@@ -1,0 +1,47 @@
+
+
+<h1>课程列表</h1>
+
+<div class="widget">
+<div class="row">
+    <div class="col-md-12">
+
+
+
+<a class="cursor" ui-sref="loginSuccess.editLessonDetail({id : null})"><i class="glyphicon glyphicon-plus" style=""></i>新增课程</a>
+    <div ng-repeat="lesson in lessons">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4"  >
+            <div class="col-sm-12" style="border:1px solid #E5E9EC; padding:5px;margin:5px;min-width:225px;">
+                <div class="col-sm-12" style="min-width:300px;">
+                    <div class="col-sm-5" style="min-width: 140px;">
+                        <img ng-src="{{lesson.image}}" height="140px" width="140px"  class="pull-left"/>
+                    </div>
+                    <div class="col-sm-7">
+                    <p ng-bind="lesson.name"></p>
+                        <p >课程等级：<span ng-bind="lesson.level"></span></p>
+                        <p>老师：<span ng-bind="lesson.teacher_name"></span></p>
+                        <p>审核状态: <span ng-bind="lesson.status | showCourseStatus"></span></p>
+                        <p>是否为推荐课程: <span>{{lesson.recommend == '1' ? '是' : '否'}}</span></p>
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-12" style="min-width: 300px;">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil cursor" ui-sref="loginSuccess.editLessonDetail({id : lesson.id})" title="修改课程"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-trash cursor" ng-click="remove(lesson)" title="删除课程"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i ng-class="{true : 'glyphicon glyphicon-check cursor', false:'glyphicon glyphicon-remove cursor'}[lesson.status=='1']" ng-click="check(lesson)"
+                                                       title="{{lesson.status=='1' ? '审核课程' : '取消审核'}}"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i ng-class="{true : 'glyphicon glyphicon-star-empty cursor', false:'glyphicon glyphicon-star cursor'}[lesson.recommend=='1']" ng-click="recommend(lesson)"
+                                                       title="{{lesson.recommend=='1' ? '取消推荐' : '设为推荐课程'}}"></i>
+                </div>
+         </div>
+    </div>
+
+</div>
+    <div class="col-md-12">
+        <pagination num-pages="page_num" current-page="page" on-select-page="selectPage(page)" class="pagination"></pagination>
+    </div>
+</div>
+</div>
+</div>

@@ -1,0 +1,92 @@
+<h1>订单列表</h1>
+<div class="widget">
+<div class="row">
+    <div class="col-md-12" style="border-bottom:1px solid #E5E9EC; margin-bottom:30px">
+
+        <form class="form-inline" ng-submit="search()" style="margin: 30px 30px ;">
+            <div class="form-group">
+                <label for="order_type" style="margin-right:10px;">订单类型</label>
+                <select id="order_type" ng-model="order_type" class="form-control"
+                        ng-options="type.id as type.name for type in orderTypeList"></select>
+            </div>
+            <div class="form-group">
+                <label for="order_status" style="margin-right:10px;">订单状态</label>
+                <select id="order_status" ng-model="order_status" class="form-control"
+                ng-options="status.id as status.name for status in orderStatusList"></select>
+            </div>
+            <div class="dropdown form-group">
+                <label style="margin-right:10px;">订单创建时间: 从</label>
+                <a class="dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown">
+                    <div class="input-group date" style="padding-top: 0px;">
+                        <input type="text" class="form-control" ng-model="created_from">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker data-ng-model="created_from" data-datetimepicker-config="{ dropdownSelector: '#dropdown1'}" data-on-set-time="setCreatedFrom(newDate, oldDate)"
+                                    data-before-render="beforeRenderStartDate($view, $dates, $leftDate, $upDate, $rightDate)"/>
+                </ul>
+            </div>
+            <label style="margin-right:10px;">到</label>
+            <div class="dropdown form-group">
+                <a class="dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" >
+                    <div class="input-group date" style="padding-top: 0px;">
+                        <input type="text" class="form-control" ng-model="created_to">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <datetimepicker ng-model="created_to" data-datetimepicker-config="{ dropdownSelector: '#dropdown2'}" data-on-set-time="setCreatedTo(newDate, oldDate)"
+                                    data-before-render="beforeRenderEndDate($view, $dates, $leftDate, $upDate, $rightDate)"/>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-left:10px;">搜索</button>
+        </form>
+    </div>
+
+    <div class="col-md-12">
+
+        <div ng-repeat="order in orders" class="col-xs-12 col-md-6 col-lg-6" >
+            <div class="col-md-12 clearfix" style="border:1px solid #E5E9EC; padding:5px;margin:5px;">
+                    <div class="col-sm-6" >
+                        <p class="text-left" style="min-width:200px ;">订单时间 {{order.create_time}}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="text-right" style="color:orange;">{{order.order_status_name}} &nbsp;{{order.reason ? '('+order.reason+')' : ''}}</p>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <img height="124px" width="124px" style="margin-right:18px" ng-src="{{order.image}}"/>
+                    </div>
+                    <div class="col-sm-8" style="font-size:22px;">
+                        <div class="col-sm-12">
+                            <p class="text-left" >{{order.product_name}}</p>
+                        </div>
+                        <div class="col-sm-12" style="font-size: 18px;">
+                            <p class="text-left" >{{order.product_property}}</p>
+                        </div>
+
+                            <div class="col-sm-12" style="font-size: 18px;">
+                                <p class="text-right" >{{order.cost_price | currency:'¥'}}</p>
+                            </div>
+
+
+                    </div>
+
+                <div class="col-sm-12">
+                    <p class="text-right" style="font-size:20px;">实付 {{order.actual_pay | currency :'¥'}}</p>
+                </div>
+
+
+                <div class="col-sm-12" ng-class="{true:'inline',false:'notDisplay'}[hover]">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-zoom-in cursor" title="查看详情" ui-sref="loginSuccess.orderDetail({id:order.order_id})"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-12">
+        <pagination num-pages="page_num" current-page="currentPage" class="pagination"></pagination>
+    </div>
+</div>
+</div>

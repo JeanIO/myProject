@@ -1,0 +1,32 @@
+<h1>乐器分类</h1>
+<div class="widget">
+<table class="table table-hover classifysTable" style="margin-top:20px;margin-bottom:0;width:400px">
+    <caption>设置乐器分类</caption>
+    <thead>
+    <tr>
+        <th></th>
+        <th>分类名称</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="type in instrumentTypeList">
+
+        <td>{{$index+1}}</td>
+        <td><input type="text" class="form-control" name="" ng-model="type.type_name" id="item_{{type.id}}" readonly/></td>
+        <td style="width:80px;vertical-align:middle;">
+            <edit ng-Model="type" ng-show="showEdit"><i class="glyphicon glyphicon-pencil cursor" title="编辑"></i></edit>
+            <cancel ng-Model="type" ng-show="showCancel"><i class="glyphicon glyphicon-remove cursor" title="取消"></i></cancel>
+            <update ng-Model="type" ng-show="showUpdate"><i class="glyphicon glyphicon-ok cursor" title="保存"></i></update>
+            <delete ng-Model="type" ng-show="showDelete"><i class="glyphicon glyphicon-trash cursor" title="删除"></i></delete>
+        </td>
+    </tr>
+
+    </tbody>
+
+</table>
+
+
+
+<a class="cursor" ng-click="addClassify()" style="font-size: 14px"><i class="glyphicon glyphicon-plus" ></i>添加分类</a>
+</div>

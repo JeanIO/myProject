@@ -1,0 +1,54 @@
+<h1>乐器列表</h1>
+<form class="form-inline widget">
+    <div class="form-group">
+        <label for="" class="btn btn-primary marginRight10" >搜索</label>
+        <input type="text"  class="form-control marginRight10" ng-model="query"  placeholder="要查询的乐器名称"/>
+    </div>
+    <div class="form-group">
+        <label for="" class="btn btn-primary marginRight10">排序</label>
+        <select  ng-model="orderBy" class="form-control marginRight10">
+            <option value="discount_price" >原价</option>
+            <option value="cost_price">售价</option>
+
+        </select>
+    </div>
+    <a class="cursor" ui-sref="loginSuccess.instrumentDetail({id : null})" style="display: block;margin-top: 10px;"><i class="glyphicon glyphicon-plus" ></i>新增乐器</a>
+</form>
+
+
+<div class="widget">
+    <div class="row">
+        <div class="col-md-12">
+        <div ng-repeat="instrument in instruments | filter: {name:query} | orderBy : orderBy">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4" >
+                <div class="col-sm-12" style="border:1px solid #E5E9EC; padding:5px;margin:5px;">
+                    <div class="col-sm-12" style="min-width: 320px;">
+                        <div class="col-sm-4" style="min-width: 110px;">
+                            <img ng-src="{{instrument.image_display}}" height="110px" width="110px" style="" />
+                        </div>
+                        <div class="col-sm-8">
+                                <p ng-bind="instrument.name"></p>
+                                <p>原价:<span ng-bind="instrument.discount_price" ></span></p>
+                                <p>售价:<span ng-bind="instrument.cost_price"></span></p>
+                                <p>是否为推荐乐器： <span>{{instrument.recommend =='1' ? '是' : '否'}}</span></p>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div style="margin-top:10px;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-trash cursor" ng-click="removeInstrument(instrument.id)"></i>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-pencil cursor" title="修改乐器详情" ui-sref="loginSuccess.instrumentDetail({id : instrument.id})"></i>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i ng-class="{true : 'glyphicon glyphicon-star-empty cursor', false:'glyphicon glyphicon-star cursor'}[instrument.recommend=='1']" ng-click="recommend(instrument)"
+                                                                   title="{{instrument.recommend=='1' ? '取消推荐' : '设为推荐乐器'}}"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <div class="col-md-12">
+            <pagination num-pages="page_num" current-page="page" class="pagination"></pagination>
+        </div>
+        </div>
+    </div>

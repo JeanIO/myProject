@@ -1,0 +1,144 @@
+<h1>{{instrument.id ? '修改乐器详情' : '新增乐器详情'}}</h1>
+<div class="row" >
+    <div class="col-xs-12 col-sm-12 col-md-10">
+        <div class="widget">
+            <form id="form" name="instrumentForm" ng-submit="instrumentForm.$valid && createInstrument()" class="form-horizontal">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">乐器名称<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="instrument.name" name="name" id="name" class="form-control"
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cost_price" class="col-sm-2 control-label">售价<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="instrument.cost_price" name="cost_price" id="cost_price" class="form-control"
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="discount_price" class="col-sm-2 control-label">原价<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="instrument.discount_price" name="discount_price" id="discount_price" class="form-control"
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="freight" class="col-sm-2 control-label">运费<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="instrument.freight" name="freight" id="freight" class="form-control"
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">库存地址<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <input type="text" ng-model="instrument.address" name="address" id="address" class="form-control"
+                               required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="freight" class="col-sm-2 control-label">设置乐器参数<span style="color:red;">*</span></label>
+                    <div class="col-md-5">
+                        <table class="table table-hover" style="margin-bottom: 0">
+
+                            <thead>
+                            <tr>
+                                <th>参数名称</th>
+
+                                <th>删除</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="arg in instrument.parameter track by $index">
+
+                                <td><input type="text" class="form-control" ng-model="instrument.parameter[$index]"/></td>
+                                <td style="width:60px;vertical-align:middle;"><a><i class="glyphicon glyphicon-trash cursor" ng-click="removeArg($index)"></i></a></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                        <a class="cursor" ng-click="addArg()" ><i class="glyphicon glyphicon-plus" ></i>添加参数</a>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="col-sm-2 control-label">描述<span style="color:red;">*</span></label>
+                    <div class="col-sm-8">
+                        <textarea ng-model="instrument.description" rows="4" name="description" id="description" class="form-control" maxlength="200"
+                               required></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-sm-2 control-label">乐器类型</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" name="type" id="type" ng-model="instrument.type"
+                                ng-options="type.id as type.type_name for type in instrumentTypeList"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <label  class="col-sm-2 control-label">主图片</label>
+                    <div class="col-sm-5">
+                        <input type="file" upload-image="image_display" id="image_display" class="form-control"/>
+                    </div>
+                    <img  ng-src="{{instrument.image_display}}"  width="110px" height="110px" alt="">
+
+                </div>
+                <div class="form-group">
+                    <label  class="col-sm-2 control-label">其他图片</label>
+                    <div class="col-sm-5">
+                        <input type="file" upload-image="image_all" id="image_all"  class="form-control" multiple="multiple"
+                        />
+                    </div>
+                    <div style="display: inline;" ng-repeat="imgSrc in instrument.image_all">
+                        <img  ng-src="{{imgSrc}}" width="110px" height="110px" alt="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-default pull-right" ng-click="addProperty()">添加属性</button>
+                    </div>
+                </div>
+                <div  ng-repeat="property in instrument.property_list" style="padding-bottom: 20px;">
+                    <div  style="position:relative">
+                        <div class="form-group">
+                            <label for="stock" class="col-sm-2 control-label">库存<span style="color:red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="property.stock" name="stock" id="stock" class="form-control"
+                                       required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="col-sm-2 control-label">价格</label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="property.price" name="price" id="price" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="property_name" class="col-sm-2 control-label">属性名称<span style="color:red;">*</span></label>
+                            <div class="col-sm-8">
+                                <input type="text" ng-model="property.property_name" name="property_name" id="property_name" class="form-control"
+                                       required/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="property_desc" class="col-sm-2 control-label">属性描述</label>
+                            <div class="col-sm-8">
+                                <textarea ng-model="property.property_desc" name="property_desc" rows="4" id="property_desc" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <i class="glyphicon glyphicon-remove cursor" ng-click="removeProperty($index)"  ng-show="property.id.indexOf('new')>-1" style="position:absolute;top:30px;left:20px;font-size: 40px" title="删除属性"></i>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-lg btn-primary pull-right">提交</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
