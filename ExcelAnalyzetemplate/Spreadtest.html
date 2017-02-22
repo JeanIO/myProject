@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+
+    <link href="http://demo.gcpowertools.com.cn/SpreadJS/TutorialSample/external/spreadjs/css/gc.spread.sheets.excel2013white.10.0.1.css" rel="stylesheet" type="text/css" />
+
+    <script src="http://demo.gcpowertools.com.cn/SpreadJS/TutorialSample/external/external/jquery-1.8.2.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript" src="Scripts/gc.spread.sheets.all.10.0.1.min.js"></script>
+    
+    <script type="text/javascript" src="Scripts/gc.spread.excelio.10.0.1.min.js"></script>
+
+    <script src="Scripts/FileSaver.min.js"></script>
+
+</head>
+<body>
+<div class="demo-options">
+    <div class="inputContainer">
+        <input type="file" id="fileDemo" class="input">
+        <input type="button" id="loadExcel" value="import" class="button">
+    </div>
+    <div class="inputContainer">
+        <input type="text" id="exportFileName" value="export.xlsx" class="input" style="font-size: 16px">
+        <input type="button" id="saveExcel" value="export" class="button">
+    </div>	
+</div>
+<div class="sample-turtorial">
+    <div id="ss" style="width:100%; height:400px;border: 1px solid gray"></div>
+</div>
+<div class="demo-options">
+    <div class="option-row">
+        <label>Password:
+            <input type="password" id="password">
+        </label>
+    </div>
+</div>
+<script type="text/javascript">
+	        $(document).ready(function () {
+            var spread = new GC.Spread.Sheets.Workbook(document.getElementById("ss"));
+            var excelIo = new GC.Spread.Excel.IO();
+            var sheet = spread.getActiveSheet();
+            // loadSaleDataAnalysisTable(sheet, 1, 0, true);
+            $("#loadExcel").click(function () {
+                var excelFile = document.getElementById("fileDemo").files[0];
+                // console.log(excelFile)
+                var password = $("#password").val();
+                // here is excel IO API
+                excelIo.open(excelFile, function (json) {
+                    var workbookObj = json;
+                    console.log(json)//this json has been varied to obj.you can get the obj here if you want.
+                    spread.fromJSON(workbookObj);
+                }, function (e) {
+                    // process error
+                    alert(e.errorMessage);
+                    if (e.errorCode === 1 /*noPassword*/) {
+                        $("#password").select();
+                    }
+                }, {password: password});
+            });
+            $("#saveExcel").click(function () {
+
+                var fileName = $("#exportFileName").val();
+                var password = $("#password").val();
+                if (fileName.substr(-5, 5) !== '.xlsx') {
+                    fileName += '.xlsx';
+                }
+
+                var json = spread.toJSON();
+
+                // here is excel IO API
+                excelIo.save(json, function (blob) {
+                    saveAs(blob, fileName);
+                }, function (e) {
+                    // process error
+                    console.log(e);
+                }, {password: password});
+
+            });
+        });
+</script>
+</body>
+</html>

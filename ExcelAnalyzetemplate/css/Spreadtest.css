@@ -1,0 +1,28 @@
+
+.inputContainer {
+    width: 390px;
+    height: auto;
+    border: 1px solid gray;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+}
+
+.input {
+    font-size: 14px;
+    width: 300px;
+    height: 20px;
+    border: 0px;
+    outline: none;
+}
+
+.button {
+    font-size: 16px;
+    height: 30px;
+    padding: 6px 12px;
+    width: 80px
+}
+
+.demo-options {
+    width: 100%;
+}
+
